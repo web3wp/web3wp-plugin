@@ -1,0 +1,17 @@
+{
+  "name": "web3wp-plugin",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": "git@github.com:web3wp/web3wp-plugin.git",
+  "author": "Rheinard Korf <rheinard.korf@xwp.co>",
+  "license": "GPLv3",
+  "scripts": {
+    "wp:dev": "wp-env start --xdebug",
+    "wp:stop": "wp-env stop",
+    "wp:destroy": "wp-env destroy",
+    "wp:clean": "wp-env clean"
+  },
+  "devDependencies": {
+    "@wordpress/env": "^4.1.3"
+  }
+}

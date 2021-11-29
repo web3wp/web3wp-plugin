@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+		{
+			"name": "Listen for Xdebug (Local)",
+			"type": "php",
+			"request": "launch",
+			"port": 9003,
+            "pathMappings": {
+                "/var/www/html/wp-content/plugins/web3wp-plugin": "${workspaceFolder}/"
+            }
+		},
+		{
+			"name": "Launch currently open script",
+			"type": "php",
+			"request": "launch",
+			"program": "${file}",
+			"cwd": "${fileDirname}",
+			"port": 9003
+		}
+	]
+}
