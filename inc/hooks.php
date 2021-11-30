@@ -5,13 +5,13 @@ namespace Web3WP;
 $options = \Web3WP\get_plugin_options();
 
 // Remove profile password fields. Maybe.
-if ( $options['disable_password_fields']) {
-    add_filter( 'show_password_fields', '__return_false', 10 );
+if ( $options['disable_password_fields'] ) {
+	add_filter( 'show_password_fields', '__return_false', 10 );
 }
 
 // Remove profile application password fields. Maybe.
-if ( $options['disable_application_passwords']) {
-    add_filter( 'wp_is_application_passwords_available_for_user', '__return_false', 10 );
+if ( $options['disable_application_passwords'] ) {
+	add_filter( 'wp_is_application_passwords_available_for_user', '__return_false', 10 );
 }
 
 /**
@@ -28,8 +28,8 @@ function enqueue_scripts() {
 	$nonce = wp_create_nonce( 'wp_rest' );
 
 	// Get the user object. Avoiding roles, etc, for security.
-    $unmodified_user = wp_get_current_user();
-	$current_user = $unmodified_user;
+	$unmodified_user = wp_get_current_user();
+	$current_user    = $unmodified_user;
 	if ( ! is_wp_error( $current_user ) ) {
 		$wallet       = get_user_meta( $current_user->ID, 'wallet_address', true );
 		$current_user = array(
@@ -39,14 +39,14 @@ function enqueue_scripts() {
 		);
 	}
 
-    // Allows for overriding additional user properties.
-    $current_user = apply_filters( 'web3wp-current-user', $current_user, $unmodified_user );
+	// Allows for overriding additional user properties.
+	$current_user = apply_filters( 'web3wp-current-user', $current_user, $unmodified_user );
 
 	$signingMessage      = sprintf( __( "Click 'Sign' to sign in with one time sign-in code: %s", 'web3wp' ), $nonce );
 	$web3wp_connect_vars = array(
 		'nonce'          => $nonce,
 		'signingMessage' => apply_filters( 'web3wp-signing-message', $signingMessage, $nonce ),
-		'baseUrl'       => rest_url( 'web3wp/' ),
+		'baseUrl'        => rest_url( 'web3wp/' ),
 		'user'           => $current_user,
 	);
 	wp_add_inline_script( 'web3wp-js', 'const web3wp_connect = ' . wp_json_encode( $web3wp_connect_vars ) );

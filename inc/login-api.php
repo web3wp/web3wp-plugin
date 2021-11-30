@@ -13,29 +13,28 @@ use WP_REST_Response;
  *
  * @return void
  */
-function rest_api_init()
-{
-    register_rest_route(
-        'web3wp',
-        '/login/',
-        array(
-            'methods'             => WP_REST_Server::CREATABLE, // POST.
-            'callback'            => __NAMESPACE__ . '\login_post_request',
-            'permission_callback' => '__return_true',
-        )
-    );
+function rest_api_init() {
+	register_rest_route(
+		'web3wp',
+		'/login/',
+		array(
+			'methods'             => WP_REST_Server::CREATABLE, // POST.
+			'callback'            => __NAMESPACE__ . '\login_post_request',
+			'permission_callback' => '__return_true',
+		)
+	);
 
-    register_rest_route(
-        'web3wp',
-        '/logout/',
-        array(
-            'methods'             => WP_REST_Server::CREATABLE, // POST.
-            'callback'            => __NAMESPACE__ . '\logout_post_request',
-            'permission_callback' => '__return_true',
-        )
-    );
+	register_rest_route(
+		'web3wp',
+		'/logout/',
+		array(
+			'methods'             => WP_REST_Server::CREATABLE, // POST.
+			'callback'            => __NAMESPACE__ . '\logout_post_request',
+			'permission_callback' => '__return_true',
+		)
+	);
 }
-add_action('rest_api_init', __NAMESPACE__ . '\rest_api_init');
+add_action( 'rest_api_init', __NAMESPACE__ . '\rest_api_init' );
 
 
 /**
@@ -100,14 +99,14 @@ function login_post_request( \WP_REST_Request $request ) {
 	}
 
 	$output = array(
-        'message' => __('User logged in.','web3wp'),
-		'user' => $user,
+		'message' => __( 'User logged in.', 'web3wp' ),
+		'user'    => $user,
 	);
 
 	return new WP_REST_Response(
-        $output,
-        200,
-    );
+		$output,
+		200,
+	);
 }
 
 /**
@@ -119,14 +118,14 @@ function login_post_request( \WP_REST_Request $request ) {
 function logout_post_request( \WP_REST_Request $request ) {
 	// REST API has already verified the nonce for us, no need to do it again.
 	$nonce = $request->get_header( 'X-WP-Nonce' );
-    wp_clear_auth_cookie();
+	wp_clear_auth_cookie();
 
 	$output = array(
-		'message' => __('User logged out.','web3wp'),
+		'message' => __( 'User logged out.', 'web3wp' ),
 	);
 
 	return new WP_REST_Response(
-        $output,
-        200,
-    );
+		$output,
+		200,
+	);
 }

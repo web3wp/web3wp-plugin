@@ -15,10 +15,13 @@ const PLUGIN_OPTIONS_KEY = 'web3wp_options';
  * @return mixed
  */
 function get_plugin_options() {
-    $options = get_option( PLUGIN_OPTIONS_KEY );
-    $options = $options ? $options : array();
-	return array_merge( array(
-        'disable_password_fields' => 1,
-        'disable_application_passwords' => 1,
-    ), $options );
+	$options = get_option( PLUGIN_OPTIONS_KEY );
+	$options = $options ? $options : array();
+	return array_merge(
+		array(
+			'disable_password_fields'       => 1,
+			'disable_application_passwords' => 1,
+		),
+		$options
+	);
 }

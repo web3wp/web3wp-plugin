@@ -23,4 +23,3 @@ require_once __DIR__ . '/inc/utils.php';
 require_once __DIR__ . '/admin/options.php';
 require_once __DIR__ . '/inc/hooks.php';
 require_once __DIR__ . '/inc/login-api.php';
-

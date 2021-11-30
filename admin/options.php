@@ -87,7 +87,7 @@ function page_init() {
 		'web3wp_password_section'
 	);
 
-    add_settings_field(
+	add_settings_field(
 		'disable_application_passwords',
 		__( 'Disable application passwords', 'web3wp' ),
 		__NAMESPACE__ . '\disable_application_passwords_callback',
@@ -104,18 +104,18 @@ function page_init() {
  */
 function sanitize( $input ) {
 	$sanitary_values = array();
-	
-    $sanitary_values['disable_password_fields'] = falsey_truthy( 'disable_password_fields', $input);
-    $sanitary_values['disable_application_passwords'] = falsey_truthy( 'disable_application_passwords', $input);
-    
+
+	$sanitary_values['disable_password_fields']       = falsey_truthy( 'disable_password_fields', $input );
+	$sanitary_values['disable_application_passwords'] = falsey_truthy( 'disable_application_passwords', $input );
+
 	return $sanitary_values;
 }
 
 function falsey_truthy( $key, $input ) {
-    if ( !isset( $input[$key] ) ) {
-        return 0;
-    }
-    return in_array( $input[$key], array( 'on', 'yes', 1, true ), true );
+	if ( ! isset( $input[ $key ] ) ) {
+		return 0;
+	}
+	return in_array( $input[ $key ], array( 'on', 'yes', 1, true ), true );
 }
 
 /**
@@ -138,9 +138,9 @@ function disable_password_fields_callback() {
 	$plugin_options = get_plugin_options();
 	printf(
 		'<input type="checkbox" name="%s[disable_password_fields]" id="disable_password_fields" %s><span class="description">%s</span>',
-        PLUGIN_OPTIONS_KEY,
+		PLUGIN_OPTIONS_KEY,
 		checked( 1, isset( $plugin_options['disable_password_fields'] ) ? (bool) $plugin_options['disable_password_fields'] : false, false ),
-        __('(recommended) This prevents the change password fields on the user profile. Keep this if you want backup logins, but its not ideal.', 'web3wp')
+		__( '(recommended) This prevents the change password fields on the user profile. Keep this if you want backup logins, but its not ideal.', 'web3wp' )
 	);
 }
 
@@ -153,8 +153,8 @@ function disable_application_passwords_callback() {
 	$plugin_options = get_plugin_options();
 	printf(
 		'<input type="checkbox" name="%s[disable_application_passwords]" id="disable_application_passwords" %s><span class="description">%s</span>',
-        PLUGIN_OPTIONS_KEY,
+		PLUGIN_OPTIONS_KEY,
 		checked( 1, isset( $plugin_options['disable_application_passwords'] ) ? (bool) $plugin_options['disable_application_passwords'] : false, false ),
-        __('Prevent application passwords for users. If your site is not exposing APIs for users, then click this checkbox.', 'web3wp')
+		__( 'Prevent application passwords for users. If your site is not exposing APIs for users, then click this checkbox.', 'web3wp' )
 	);
 }
