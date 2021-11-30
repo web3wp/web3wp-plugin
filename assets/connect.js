@@ -55,7 +55,7 @@ const getWalletConnection = async () => {
 const loginBySigning = async (walletAddress, signingMessage, nonce, loginUrl) => {
     const signer = await getSigner();
     const signedMessage = await signer.signMessage(JSON.stringify(signingMessage))
-    
+
     let response = await fetch(loginUrl, {
         method: 'POST',
         headers: {
@@ -67,10 +67,30 @@ const loginBySigning = async (walletAddress, signingMessage, nonce, loginUrl) =>
 
     if (response.ok) { // if HTTP-status is 200-299
         const json = await response.json()
-        if(json.user) { location.reload(); }
+        if (json.user) { location.reload(); }
     }
 
     return walletAddress;
+}
+
+const attach_events = async (params) => {
+
+    // Changing wallet.
+    window.ethereum.on('accountsChanged', async (accounts) => {
+        const {logoutUrl,nonce} = params;
+        let response = await fetch(logoutUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'X-WP-Nonce': nonce,
+            }
+        });
+    
+        if (response.ok) { // if HTTP-status is 200-299
+            const json = await response.json()
+            location.reload()
+        }
+    })
 }
 
 const init = async () => {
@@ -81,7 +101,15 @@ const init = async () => {
             return
         }
 
-        const { nonce, user, signingMessage, loginUrl } = web3wp_connect
+        const { nonce, user, signingMessage, baseUrl } = web3wp_connect        
+        const loginUrl = `${baseUrl}login`;
+        const logoutUrl = `${baseUrl}logout`;
+
+        await attach_events({ 
+            logoutUrl,
+            loginUrl,
+            nonce,
+        });
 
         // If the user is not logged in, attempt a login.
         if (nonce && user.ID === 0) {

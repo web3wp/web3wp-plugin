@@ -6,6 +6,7 @@ use WP_REST_Request;
 use WP_REST_Server;
 use WP_User_Query;
 use \Web3WP\Crypto\EcRecover;
+use WP_REST_Response;
 
 /**
  * Initialize the Web3WP APIs.
@@ -20,6 +21,16 @@ function rest_api_init()
         array(
             'methods'             => WP_REST_Server::CREATABLE, // POST.
             'callback'            => __NAMESPACE__ . '\login_post_request',
+            'permission_callback' => '__return_true',
+        )
+    );
+
+    register_rest_route(
+        'web3wp',
+        '/logout/',
+        array(
+            'methods'             => WP_REST_Server::CREATABLE, // POST.
+            'callback'            => __NAMESPACE__ . '\logout_post_request',
             'permission_callback' => '__return_true',
         )
     );
@@ -89,14 +100,33 @@ function login_post_request( \WP_REST_Request $request ) {
 	}
 
 	$output = array(
-		// 'message' => $message,
-		// 'request' => $request->get_headers()
-		// 'nonce' => $nonce,
-		// 'message' => $message,
-		// 'wallet_address' => $decoded,
-		// 'signature' => $signature
+        'message' => __('User logged in.','web3wp'),
 		'user' => $user,
 	);
 
-	return $output;
+	return new WP_REST_Response(
+        $output,
+        200,
+    );
+}
+
+/**
+ * Handle the logout POST request.
+ *
+ * @param \WP_REST_Request $request Request object.
+ * @return void
+ */
+function logout_post_request( \WP_REST_Request $request ) {
+	// REST API has already verified the nonce for us, no need to do it again.
+	$nonce = $request->get_header( 'X-WP-Nonce' );
+    wp_clear_auth_cookie();
+
+	$output = array(
+		'message' => __('User logged out.','web3wp'),
+	);
+
+	return new WP_REST_Response(
+        $output,
+        200,
+    );
 }

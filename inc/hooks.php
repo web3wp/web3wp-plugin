@@ -46,7 +46,7 @@ function enqueue_scripts() {
 	$web3wp_connect_vars = array(
 		'nonce'          => $nonce,
 		'signingMessage' => apply_filters( 'web3wp-signing-message', $signingMessage, $nonce ),
-		'loginUrl'       => rest_url( 'web3wp/login' ),
+		'baseUrl'       => rest_url( 'web3wp/' ),
 		'user'           => $current_user,
 	);
 	wp_add_inline_script( 'web3wp-js', 'const web3wp_connect = ' . wp_json_encode( $web3wp_connect_vars ) );
