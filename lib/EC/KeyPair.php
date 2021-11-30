@@ -1,5 +1,5 @@
 <?php
-
+// Source: https://github.com/simplito/elliptic-php
 namespace Web3WP\Crypto\EC;
 
 use Web3WP\Crypto\BN;

@@ -15,5 +15,10 @@
  * Author URI: https://rheinardkorf.com
  * License: GPLv3
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
- * Text Domain: wallet-connect
+ * Text Domain: web3wp
  */
+
+require_once __DIR__ . '/inc/utils.php';
+require_once __DIR__ . '/admin/options.php';
+require_once __DIR__ . '/inc/hooks.php';
+
