@@ -18,7 +18,9 @@
  * Text Domain: web3wp
  */
 
+require_once __DIR__ . '/lib/index.php';
 require_once __DIR__ . '/inc/utils.php';
 require_once __DIR__ . '/admin/options.php';
 require_once __DIR__ . '/inc/hooks.php';
+require_once __DIR__ . '/inc/login-api.php';
 

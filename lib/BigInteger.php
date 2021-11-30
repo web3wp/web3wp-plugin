@@ -324,9 +324,6 @@ class BigInteger{
             }
             if ($base == 16) {
                 $value = str_replace(" ", "", $value);
-                if (!BigInteger::checkHex($value)) {
-                    throw new \Exception("Invalid characters");
-                }
                 $minus = $value[0] == "-";
                 if ($minus) {
                     $value = substr($value, 1);

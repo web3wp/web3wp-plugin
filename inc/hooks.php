@@ -49,6 +49,6 @@ function enqueue_scripts() {
 		'loginUrl'       => rest_url( 'web3wp/login' ),
 		'user'           => $current_user,
 	);
-	wp_add_inline_script( 'web3wp-connect', 'const web3wp_connect = ' . wp_json_encode( $web3wp_connect_vars ) );
+	wp_add_inline_script( 'web3wp-js', 'const web3wp_connect = ' . wp_json_encode( $web3wp_connect_vars ) );
 }
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_scripts' );

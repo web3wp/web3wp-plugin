@@ -59,8 +59,6 @@ class EcRecover {
 	 *   If keccak hash does not match formal conditions.
 	 */
 	public static function phpEcRecover( string $message_hash, string $signature ) {
-		$return = null;
-
 		$ec    = new EC( 'secp256k1' );
 		$sign  = array(
 			'r' => substr( $signature, 2, 64 ),
