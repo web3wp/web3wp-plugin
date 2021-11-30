@@ -1,4 +1,9 @@
 <?php
+/**
+ * Login API endpoints.
+ *
+ * @package Web3WP
+ */
 
 namespace Web3WP;
 
@@ -41,15 +46,16 @@ add_action( 'rest_api_init', __NAMESPACE__ . '\rest_api_init' );
  * Handle the login POST request.
  *
  * @param \WP_REST_Request $request Request object.
- * @return void
+ * @return \WP_REST_Response
  */
 function login_post_request( \WP_REST_Request $request ) {
 	// REST API has already verified the nonce for us, no need to do it again.
 	$nonce = $request->get_header( 'X-WP-Nonce' );
 
 	// Determine the wallet address.
-	$signingMessage = sprintf( __( "Click 'Sign' to sign in with one time sign-in code: %s", 'wallet_connect' ), $nonce );
-	$message        = json_encode( apply_filters( 'wallet-connect-signing-message', $signingMessage, $nonce ) );
+	// translators: Place the nonce where required.
+	$signing_message = sprintf( __( "Click 'Sign' to sign in with one time sign-in code: %s", 'web3wp' ), $nonce );
+	$message         = wp_json_encode( apply_filters( 'web3wp_signing_message', $signing_message, $nonce ) );
 
 	$signature      = $request->get_header( 'X-Signed-Message' );
 	$wallet_address = EcRecover::personalEcRecover( $message, $signature );
@@ -94,8 +100,8 @@ function login_post_request( \WP_REST_Request $request ) {
 	// If we have a valid user then log them in!
 	if ( ! is_wp_error( $user ) ) {
 		wp_clear_auth_cookie();
-		wp_set_current_user( $user->ID ); // Set the current user detail
-		wp_set_auth_cookie( $user->ID ); // Set auth details in cookie
+		wp_set_current_user( $user->ID ); // Set the current user detail.
+		wp_set_auth_cookie( $user->ID ); // Set auth details in cookie.
 	}
 
 	$output = array(
@@ -113,7 +119,7 @@ function login_post_request( \WP_REST_Request $request ) {
  * Handle the logout POST request.
  *
  * @param \WP_REST_Request $request Request object.
- * @return void
+ * @return \WP_REST_Response
  */
 function logout_post_request( \WP_REST_Request $request ) {
 	// REST API has already verified the nonce for us, no need to do it again.

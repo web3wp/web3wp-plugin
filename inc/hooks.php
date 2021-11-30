@@ -1,4 +1,9 @@
 <?php
+/**
+ * WordPress hooks.
+ *
+ * @package Web3WP
+ */
 
 namespace Web3WP;
 
@@ -21,8 +26,8 @@ if ( $options['disable_application_passwords'] ) {
  */
 function enqueue_scripts() {
 	// Wallet connect features.
-	wp_enqueue_script( 'ethers-js', plugins_url() . '/web3wp-plugin/assets/ethers-5.1.umd.min.js', array(), false, true );
-	wp_enqueue_script( 'web3wp-js', plugins_url() . '/web3wp-plugin/assets/connect.js', array( 'ethers-js' ), false, true );
+	wp_enqueue_script( 'ethers-js', plugins_url() . '/web3wp-plugin/assets/ethers-5.1.umd.min.js', array(), '20211130', true );
+	wp_enqueue_script( 'web3wp-js', plugins_url() . '/web3wp-plugin/assets/connect.js', array( 'ethers-js' ), '20211130', true );
 
 	// The `wp_rest` nonce will be handled by the REST API.
 	$nonce = wp_create_nonce( 'wp_rest' );
@@ -34,18 +39,19 @@ function enqueue_scripts() {
 		$wallet       = get_user_meta( $current_user->ID, 'wallet_address', true );
 		$current_user = array(
 			'ID'             => $current_user->ID,
-			'display_name'   => $current_user->ID === 0 ? '' : $current_user->data->display_name,
+			'display_name'   => 0 === $current_user->ID ? '' : $current_user->data->display_name,
 			'wallet_address' => $wallet,
 		);
 	}
 
 	// Allows for overriding additional user properties.
-	$current_user = apply_filters( 'web3wp-current-user', $current_user, $unmodified_user );
+	$current_user = apply_filters( 'web3wp_current_user', $current_user, $unmodified_user );
 
-	$signingMessage      = sprintf( __( "Click 'Sign' to sign in with one time sign-in code: %s", 'web3wp' ), $nonce );
+	// translators: Place the nonce where required.
+	$signing_message     = sprintf( __( "Click 'Sign' to sign in with one time sign-in code: %s", 'web3wp' ), $nonce );
 	$web3wp_connect_vars = array(
 		'nonce'          => $nonce,
-		'signingMessage' => apply_filters( 'web3wp-signing-message', $signingMessage, $nonce ),
+		'signingMessage' => apply_filters( 'web3wp_signing_message', $signing_message, $nonce ),
 		'baseUrl'        => rest_url( 'web3wp/' ),
 		'user'           => $current_user,
 	);

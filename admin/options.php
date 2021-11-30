@@ -14,7 +14,6 @@ if ( ! \is_admin() ) {
 }
 
 const PLUGIN_OPTIONS_KEY = \Web3WP\PLUGIN_OPTIONS_KEY;
-// delete_option(PLUGIN_OPTIONS_KEY);
 
 add_action( 'admin_menu', __NAMESPACE__ . '\add_plugin_page' );
 add_action( 'admin_init', __NAMESPACE__ . '\page_init' );
@@ -111,6 +110,13 @@ function sanitize( $input ) {
 	return $sanitary_values;
 }
 
+/**
+ * Returns real true/false values.
+ *
+ * @param [type] $key   Key to search on the $input.
+ * @param [type] $input Input to search.
+ * @return bool
+ */
 function falsey_truthy( $key, $input ) {
 	if ( ! isset( $input[ $key ] ) ) {
 		return 0;
@@ -138,9 +144,9 @@ function disable_password_fields_callback() {
 	$plugin_options = get_plugin_options();
 	printf(
 		'<input type="checkbox" name="%s[disable_password_fields]" id="disable_password_fields" %s><span class="description">%s</span>',
-		PLUGIN_OPTIONS_KEY,
+		esc_attr( PLUGIN_OPTIONS_KEY ),
 		checked( 1, isset( $plugin_options['disable_password_fields'] ) ? (bool) $plugin_options['disable_password_fields'] : false, false ),
-		__( '(recommended) This prevents the change password fields on the user profile. Keep this if you want backup logins, but its not ideal.', 'web3wp' )
+		esc_html__( '(recommended) This prevents the change password fields on the user profile. Keep this if you want backup logins, but its not ideal.', 'web3wp' )
 	);
 }
 
@@ -153,8 +159,8 @@ function disable_application_passwords_callback() {
 	$plugin_options = get_plugin_options();
 	printf(
 		'<input type="checkbox" name="%s[disable_application_passwords]" id="disable_application_passwords" %s><span class="description">%s</span>',
-		PLUGIN_OPTIONS_KEY,
+		esc_attr( PLUGIN_OPTIONS_KEY ),
 		checked( 1, isset( $plugin_options['disable_application_passwords'] ) ? (bool) $plugin_options['disable_application_passwords'] : false, false ),
-		__( 'Prevent application passwords for users. If your site is not exposing APIs for users, then click this checkbox.', 'web3wp' )
+		esc_html__( 'Prevent application passwords for users. If your site is not exposing APIs for users, then click this checkbox.', 'web3wp' )
 	);
 }
