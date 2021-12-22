@@ -77,7 +77,7 @@ const attach_events = async (params) => {
 
     // Changing wallet.
     window.ethereum.on('accountsChanged', async (accounts) => {
-        const {logoutUrl,nonce} = params;
+        const { logoutUrl, nonce } = params;
         let response = await fetch(logoutUrl, {
             method: 'POST',
             headers: {
@@ -85,7 +85,7 @@ const attach_events = async (params) => {
                 'X-WP-Nonce': nonce,
             }
         });
-    
+
         if (response.ok) { // if HTTP-status is 200-299
             const json = await response.json()
             location.reload()
@@ -94,12 +94,16 @@ const attach_events = async (params) => {
 
     // Get login trigger.
     const cssTrigger = params.walletCssTrigger
-    if ( cssTrigger ) {
-        document.querySelectorAll(`.${cssTrigger}`).forEach(function(el){ 
+    if (cssTrigger) {
+        document.querySelectorAll(`.${cssTrigger}`).forEach(function (el) {
             el.addEventListener('click', async () => {
-                if (params.nonce && params.user.ID === 0) {
-                    // Login by signing the nonce.
-                    await loginBySigning(params.connectedWallet, params.signingMessage, params.nonce, params.loginUrl);
+
+                const connectedWallet = await getWalletConnection()
+                if (connectedWallet) {
+                    if (params.nonce && params.user.ID === 0) {
+                        // Login by signing the nonce.
+                        await loginBySigning(params.connectedWallet, params.signingMessage, params.nonce, params.loginUrl);
+                    }
                 }
             })
         })
@@ -108,26 +112,23 @@ const attach_events = async (params) => {
 
 const init = async () => {
     try {
-        const connectedWallet = await getWalletConnection()
-        if (!connectedWallet) {
-            console.log('Wallet not connected.')
-            return
-        }
 
-        const { nonce, user, signingMessage, baseUrl, autoConnectWallet } = web3wp_connect        
+        const { nonce, user, signingMessage, baseUrl, autoConnectWallet } = web3wp_connect
         const loginUrl = `${baseUrl}login`;
         const logoutUrl = `${baseUrl}logout`;
 
-        await attach_events({ 
+        await attach_events({
             logoutUrl,
             loginUrl,
             ...web3wp_connect,
-            connectedWallet, 
             signingMessage,
         });
 
         // If the user is not logged in, attempt a login.
         if (nonce && user.ID === 0 && autoConnectWallet) {
+
+            const connectedWallet = await getWalletConnection();
+
             // Login by signing the nonce.
             await loginBySigning(connectedWallet, signingMessage, nonce, loginUrl);
         }
@@ -137,5 +138,10 @@ const init = async () => {
     }
 }
 
-init();
+if (document.readyState != 'loading') {
+    init();
+} else {
+    document.addEventListener('DOMContentLoaded', init);
+}
+
 
