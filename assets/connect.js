@@ -91,6 +91,19 @@ const attach_events = async (params) => {
             location.reload()
         }
     })
+
+    // Get login trigger.
+    const cssTrigger = params.walletCssTrigger
+    if ( cssTrigger ) {
+        document.querySelectorAll(`.${cssTrigger}`).forEach(function(el){ 
+            el.addEventListener('click', async () => {
+                if (params.nonce && params.user.ID === 0) {
+                    // Login by signing the nonce.
+                    await loginBySigning(params.connectedWallet, params.signingMessage, params.nonce, params.loginUrl);
+                }
+            })
+        })
+    }
 }
 
 const init = async () => {
@@ -101,18 +114,20 @@ const init = async () => {
             return
         }
 
-        const { nonce, user, signingMessage, baseUrl } = web3wp_connect        
+        const { nonce, user, signingMessage, baseUrl, autoConnectWallet } = web3wp_connect        
         const loginUrl = `${baseUrl}login`;
         const logoutUrl = `${baseUrl}logout`;
 
         await attach_events({ 
             logoutUrl,
             loginUrl,
-            nonce,
+            ...web3wp_connect,
+            connectedWallet, 
+            signingMessage,
         });
 
         // If the user is not logged in, attempt a login.
-        if (nonce && user.ID === 0) {
+        if (nonce && user.ID === 0 && autoConnectWallet) {
             // Login by signing the nonce.
             await loginBySigning(connectedWallet, signingMessage, nonce, loginUrl);
         }

@@ -69,6 +69,32 @@ function page_init() {
 	);
 
 	/*
+	 * Login trigger settings.
+	 */
+	add_settings_section(
+		'web3wp_login_section', // id.
+		__( 'Login Settings', 'web3wp' ), // title.
+		null, // callback.
+		'web3wp-admin' // page.
+	);
+
+	add_settings_field(
+		'login_trigger_class',
+		__( 'CSS trigger class', 'web3wp' ),
+		__NAMESPACE__ . '\login_trigger_class_callback',
+		'web3wp-admin',
+		'web3wp_login_section'
+	);
+
+	add_settings_field(
+		'login_trigger_auto',
+		__( 'Connect wallet on load', 'web3wp' ),
+		__NAMESPACE__ . '\login_trigger_auto_callback',
+		'web3wp-admin',
+		'web3wp_login_section'
+	);
+
+	/*
 	 * E-mail and Password settings.
 	 */
 	add_settings_section(
@@ -104,6 +130,9 @@ function page_init() {
 function sanitize( $input ) {
 	$sanitary_values = array();
 
+	$sanitary_values['login_trigger_class']   = isset( $input['login_trigger_class'] ) && ! empty( $input['login_trigger_class'] ) ? sanitize_text_field( wp_unslash( $input['login_trigger_class'] ) ) : 'connect-wallet-link';
+	$sanitary_values['login_trigger_auto'] = falsey_truthy( 'login_trigger_auto', $input );
+
 	$sanitary_values['disable_password_fields']       = falsey_truthy( 'disable_password_fields', $input );
 	$sanitary_values['disable_application_passwords'] = falsey_truthy( 'disable_application_passwords', $input );
 
@@ -122,6 +151,33 @@ function falsey_truthy( $key, $input ) {
 		return 0;
 	}
 	return in_array( $input[ $key ], array( 'on', 'yes', 1, true ), true );
+}
+
+
+/**
+ * Render field.
+ *
+ * @return void
+ */
+function login_trigger_class_callback() {
+	$plugin_options = get_plugin_options();
+	printf(
+		'<input type="text" name="%s[login_trigger_class]" id="login_trigger_class" value="%s" placeholder="%s"><br><span class="description">%s</span>',
+		esc_attr( PLUGIN_OPTIONS_KEY ),
+		isset( $plugin_options['login_trigger_class'] ) ? esc_attr( $plugin_options['login_trigger_class'] ) : '',
+		esc_attr( 'connect-wallet-link' ),
+		esc_html__( 'CSS class that will trigger wallet connect.', 'web3wp' )
+	);
+}
+
+function login_trigger_auto_callback() {
+	$plugin_options = get_plugin_options();
+	printf(
+		'<input type="checkbox" name="%s[login_trigger_auto]" id="login_trigger_auto" %s><span class="description">%s</span>',
+		esc_attr( PLUGIN_OPTIONS_KEY ),
+		checked( 1, isset( $plugin_options['login_trigger_auto'] ) ? (bool) $plugin_options['login_trigger_auto'] : false, false ),
+		esc_html__( 'Trigger immediately when a user visits.', 'web3wp' )
+	);
 }
 
 /**
