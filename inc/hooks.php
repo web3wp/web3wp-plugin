@@ -25,6 +25,9 @@ if ( $options['disable_application_passwords'] ) {
  * @return void
  */
 function enqueue_scripts() {
+
+	$options = \Web3WP\get_plugin_options();
+
 	// Wallet connect features.
 	wp_enqueue_script( 'ethers-js', plugins_url() . '/web3wp-plugin/assets/ethers-5.1.umd.min.js', array(), '20211130', true );
 	wp_enqueue_script( 'web3wp-js', plugins_url() . '/web3wp-plugin/assets/connect.js', array( 'ethers-js' ), '20211130', true );
@@ -50,10 +53,12 @@ function enqueue_scripts() {
 	// translators: Place the nonce where required.
 	$signing_message     = sprintf( __( "Click 'Sign' to sign in with one time sign-in code: %s", 'web3wp' ), $nonce );
 	$web3wp_connect_vars = array(
-		'nonce'          => $nonce,
-		'signingMessage' => apply_filters( 'web3wp_signing_message', $signing_message, $nonce ),
-		'baseUrl'        => rest_url( 'web3wp/' ),
-		'user'           => $current_user,
+		'nonce'             => $nonce,
+		'signingMessage'    => apply_filters( 'web3wp_signing_message', $signing_message, $nonce ),
+		'baseUrl'           => rest_url( 'web3wp/' ),
+		'user'              => $current_user,
+		'walletCssTrigger'  => isset( $options['login_trigger_class'] ) ? esc_attr( $options['login_trigger_class'] ) : 'connect-wallet-link',
+		'autoConnectWallet' => isset( $options['login_trigger_auto'] ) && $options['login_trigger_auto'],
 	);
 	wp_add_inline_script( 'web3wp-js', 'const web3wp_connect = ' . wp_json_encode( $web3wp_connect_vars ) );
 }
