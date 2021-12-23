@@ -160,8 +160,8 @@ function page_init() {
 function sanitize( $input ) {
 	$sanitary_values = array();
 
-	$sanitary_values['login_trigger_class']   = isset( $input['login_trigger_class'] ) && ! empty( $input['login_trigger_class'] ) ? sanitize_text_field( wp_unslash( $input['login_trigger_class'] ) ) : 'connect-wallet-link';
-	$sanitary_values['login_trigger_auto'] = falsey_truthy( 'login_trigger_auto', $input );
+	$sanitary_values['login_trigger_class'] = isset( $input['login_trigger_class'] ) && ! empty( $input['login_trigger_class'] ) ? sanitize_text_field( wp_unslash( $input['login_trigger_class'] ) ) : 'connect-wallet-link';
+	$sanitary_values['login_trigger_auto']  = falsey_truthy( 'login_trigger_auto', $input );
 
 	$sanitary_values['disable_password_fields']       = falsey_truthy( 'disable_password_fields', $input );
 	$sanitary_values['disable_application_passwords'] = falsey_truthy( 'disable_application_passwords', $input );
@@ -202,6 +202,11 @@ function login_trigger_class_callback() {
 	);
 }
 
+/**
+ * Plugin psuedo autoloader.
+ *
+ * @return void
+ */
 function login_trigger_auto_callback() {
 	$plugin_options = get_plugin_options();
 	printf(
@@ -258,14 +263,14 @@ function disable_application_passwords_callback() {
  */
 function web3wp_default_network_callback() {
 
-	$plugin_options = get_plugin_options();
-	$networks = get_networks();
+	$plugin_options   = get_plugin_options();
+	$networks         = get_networks();
 	$selected_network = isset( $plugin_options['default_network'] ) ? $plugin_options['default_network'] : '';
 
 	printf(
 		'<select name="%s[default_network]" id="default_network">',
 		esc_attr( PLUGIN_OPTIONS_KEY ),
-	);	
+	);
 
 	foreach ( $networks as $nw_slug => $network ) {
 		$select = selected( $nw_slug, $selected_network );
@@ -275,5 +280,5 @@ function web3wp_default_network_callback() {
 		);
 	}
 
-	esc_html_e('</select>');
+	esc_html_e( '</select>' );
 }
