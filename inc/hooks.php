@@ -58,3 +58,61 @@ function enqueue_scripts() {
 	wp_add_inline_script( 'web3wp-js', 'const web3wp_connect = ' . wp_json_encode( $web3wp_connect_vars ) );
 }
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_scripts' );
+
+function add_common_networks( $networks ) {
+
+	$common = (array) $networks;
+
+	// Ethereum.
+	$common = array_merge(
+		array(
+			'ethereum' => array(
+				'name'         => 'Ethereum Mainnet',
+				'rpc_url'      => 'https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+				'chain_id'     => 1,
+				'symbol'       => 'ETH',
+				'explorer_url' => 'https://etherscan.io',
+				'locked'       => true,
+				'type'         => 'evm',
+			),
+			'rinkeby'  => array(
+				'name'         => 'Ethereum (Rinkeby Testnet)',
+				'rpc_url'      => 'https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+				'chain_id'     => 4,
+				'symbol'       => 'ETH',
+				'explorer_url' => 'https://rinkeby.etherscan.io',
+				'locked'       => true,
+				'type'         => 'evm',
+			),
+		),
+		$common
+	);
+
+	// Polygon.
+	$common = array_merge(
+		array(
+			'polygon' => array(
+				'name'         => 'Polygon Mainnet',
+				'rpc_url'      => 'https://rpc-mainnet.maticvigil.com',
+				'chain_id'     => 137,
+				'symbol'       => 'MATIC',
+				'explorer_url' => 'https://polygonscan.com/',
+				'locked'       => true,
+				'type'         => 'evm',
+			),
+			'mumbai'  => array(
+				'name'         => 'Polygon (Mumbai Testnet)',
+				'rpc_url'      => 'https://rpc-mumbai.maticvigil.com',
+				'chain_id'     => 80001,
+				'symbol'       => 'MATIC',
+				'explorer_url' => 'https://mumbai.polygonscan.com',
+				'locked'       => true,
+				'type'         => 'evm',
+			),
+		),
+		$common
+	);
+
+	return $common;
+}
+add_filter( 'web3wp_networks', __NAMESPACE__ . '\add_common_networks', 1, 1 );

@@ -8,6 +8,7 @@
 namespace Web3WP;
 
 const PLUGIN_OPTIONS_KEY = 'web3wp_options';
+const PLUGIN_NETWORKS_KEY = 'web3wp_networks';
 
 /**
  * Utility function to get plugin options.
@@ -24,4 +25,19 @@ function get_plugin_options() {
 		),
 		$options
 	);
+}
+
+/**
+ * Utility function to get EVM networks.
+ * 
+ * @return mixed
+ */
+function get_networks() {
+	$networks = maybe_unserialize( get_option( PLUGIN_NETWORKS_KEY ) );
+	
+	if ( empty( $networks ) ) {
+		$networks = array();
+	}
+
+	return apply_filters( 'web3wp_networks', (array) $networks );
 }

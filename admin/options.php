@@ -8,6 +8,7 @@
 namespace Web3WP\Admin;
 
 use function Web3WP\get_plugin_options;
+use function Web3WP\get_networks;
 
 if ( ! \is_admin() ) {
 	return;
@@ -24,13 +25,24 @@ add_action( 'admin_init', __NAMESPACE__ . '\page_init' );
  * @return void
  */
 function add_plugin_page() {
+
 	add_menu_page(
-		__( 'Web3 WP', 'web3wp' ), // page_title.
-		__( 'Web3 WP', 'web3wp' ), // menu_title.
-		'manage_options', // capability.
-		'web3wp', // menu_slug.
+		'', // Overwritten.
+		__( 'Web3 WP', 'web3wp' ), // Root menu title.
+		'manage_options',
+		'web3wp',
 		__NAMESPACE__ . '\create_admin_page',
-		'dashicons-id'
+		"data:image/svg+xml,%3Csvg clip-rule='evenodd' fill-rule='evenodd' stroke-linejoin='round' stroke-miterlimit='2' viewBox='0 0 400 500' width='34' height='20' xml:space='preserve' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='matrix(5 0 0 5 -1665 -805.1)'%3E%3Cg transform='translate(-18 -57.98)'%3E%3Cpath d='m402 278.09h0.018c0.347 6.588 5.807 11.831 12.482 11.831s12.135-5.243 12.482-11.831h0.018v-52.587c0-3.587 2.913-6.5 6.5-6.5s6.5 2.913 6.5 6.5v52.668c0 13.66-11.09 24.75-24.75 24.75-8.062 0-15.229-3.863-19.75-9.839-4.521 5.976-11.688 9.839-19.75 9.839-13.66 0-24.75-11.09-24.75-24.75v-52.668c0-3.587 2.913-6.5 6.5-6.5s6.5 2.913 6.5 6.5v52.587h0.018c0.347 6.588 5.807 11.831 12.482 11.831s12.135-5.243 12.482-11.831h0.018v-52.257c0-3.77 2.913-6.83 6.5-6.83s6.5 3.06 6.5 6.83v52.257z' fill='rgba(255,255,255,1.0)'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"
+	);
+
+	// Duplication hack to remove root item as a sub item.
+	add_submenu_page(
+		'web3wp',
+		'', // Overwritten.
+		__( 'Settings', 'web3wp' ), // menu_title.
+		'manage_options',
+		'web3wp', // Duplicate root slug.
+		__NAMESPACE__ . '\create_admin_page', // Duplicate root function.
 	);
 }
 
