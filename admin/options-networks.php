@@ -44,19 +44,6 @@ function add_network_settings_page() {
  */
 function render_display_mode( $networks ) {
 	?>
-		<p><?php echo esc_html__( 'Available Networks', 'web3wp' ); ?></p>
-		<!-- <select name="networks">
-		<?php
-
-		foreach ( $networks as $nw_slug => $network ) {
-			printf(
-				'<option value="' . esc_attr( $nw_slug ) . '">' . esc_html( $network['name'] ) . ( $network['locked'] ? ' - &#x1f512;' : '' ) . '</option>'
-			);
-		}
-
-		?>
-		</select> -->
-
 		<table class="wp-list-table widefat fixed striped" cellspacing="0" aria-describedby="">
 			<thead>
 				<tr>
@@ -406,7 +393,7 @@ function network_settings_page_init() {
 		// explorer_url.
 		add_settings_field(
 			'network_setting_explorer',
-			__( 'Name', 'web3wp' ),
+			__( 'Explorer', 'web3wp' ),
 			__NAMESPACE__ . '\network_setting_explorer_cb',
 			'web3wp-networks',
 			'web3wp_network_default_section',
@@ -465,7 +452,7 @@ function network_setting_name_cb( $params ) {
 		esc_attr( $slug ),
 		esc_attr( $network['name'] ),
 		esc_attr( $disabled ),
-		esc_html__( 'A shortname used internally to identify the network (no spaces or symbols, except dashes).', 'web3wp' )
+		esc_html__( 'Readable name to recognize the chain.', 'web3wp' )
 	);
 }
 
@@ -486,7 +473,7 @@ function network_setting_rpc_cb( $params ) {
 		esc_attr( $slug ),
 		esc_attr( $network['rpc_url'] ),
 		esc_attr( $disabled ),
-		esc_html__( 'A shortname used internally to identify the network (no spaces or symbols, except dashes).', 'web3wp' )
+		esc_html__( 'RPC to use for connecting to the blockchain. Note: Public RPCs usually only give read access.', 'web3wp' )
 	);
 }
 
@@ -507,7 +494,7 @@ function network_setting_chain_cb( $params ) {
 		esc_attr( $slug ),
 		esc_attr( $network['chain_id'] ),
 		esc_attr( $disabled ),
-		esc_html__( 'A shortname used internally to identify the network (no spaces or symbols, except dashes).', 'web3wp' )
+		esc_html__( 'An EVM chain identifier. Integer values.', 'web3wp' )
 	);
 }
 
@@ -528,7 +515,7 @@ function network_setting_symbol_cb( $params ) {
 		esc_attr( $slug ),
 		esc_attr( $network['symbol'] ),
 		esc_attr( $disabled ),
-		esc_html__( 'A shortname used internally to identify the network (no spaces or symbols, except dashes).', 'web3wp' )
+		esc_html__( 'Primary token symbol for the chain.', 'web3wp' )
 	);
 }
 

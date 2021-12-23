@@ -131,6 +131,24 @@ function page_init() {
 		'web3wp-admin',
 		'web3wp_password_section'
 	);
+
+	/*
+	 * Network settings.
+	 */
+	add_settings_section(
+		'web3wp_network_config_section', // id.
+		__( 'Network Configuration', 'web3wp' ), // title.
+		null, // callback.
+		'web3wp-admin' // page.
+	);
+
+	add_settings_field(
+		'web3wp_default_network',
+		__( 'Default Network', 'web3wp' ),
+		__NAMESPACE__ . '\web3wp_default_network_callback',
+		'web3wp-admin',
+		'web3wp_network_config_section'
+	);
 }
 
 /**
@@ -147,6 +165,8 @@ function sanitize( $input ) {
 
 	$sanitary_values['disable_password_fields']       = falsey_truthy( 'disable_password_fields', $input );
 	$sanitary_values['disable_application_passwords'] = falsey_truthy( 'disable_application_passwords', $input );
+
+	$sanitary_values['default_network'] = isset( $input['default_network'] ) && ! empty( $input['default_network'] ) ? sanitize_text_field( wp_unslash( $input['default_network'] ) ) : 'ethereum';
 
 	return $sanitary_values;
 }
@@ -231,4 +251,29 @@ function disable_application_passwords_callback() {
 		checked( 1, isset( $plugin_options['disable_application_passwords'] ) ? (bool) $plugin_options['disable_application_passwords'] : false, false ),
 		esc_html__( 'Prevent application passwords for users. If your site is not exposing APIs for users, then click this checkbox.', 'web3wp' )
 	);
+}
+
+/**
+ * Render default network field.
+ */
+function web3wp_default_network_callback() {
+
+	$plugin_options = get_plugin_options();
+	$networks = get_networks();
+	$selected_network = isset( $plugin_options['default_network'] ) ? $plugin_options['default_network'] : '';
+
+	printf(
+		'<select name="%s[default_network]" id="default_network">',
+		esc_attr( PLUGIN_OPTIONS_KEY ),
+	);	
+
+	foreach ( $networks as $nw_slug => $network ) {
+		$select = selected( $nw_slug, $selected_network );
+		printf(
+			'<option %s value="' . esc_attr( $nw_slug ) . '">' . esc_html( $network['name'] ) . ( $network['locked'] ? ' - &#x1f512;' : '' ) . '</option>',
+			esc_attr( $select )
+		);
+	}
+
+	esc_html_e('</select>');
 }
